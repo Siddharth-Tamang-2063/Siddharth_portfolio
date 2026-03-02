@@ -370,8 +370,8 @@ const Hero = () => {
             }}
           >
             {[
-              { num:10, suffix:"+", label:"Projects Shipped" },
-              { num:2,  suffix:"+", label:"Years Building"   },
+              { num:5, suffix:"+", label:"Projects Shipped" },
+              { num:1.5,  suffix:"+", label:"Years Building"   },
               { num:5,  suffix:"+", label:"Happy Clients"    },
               { num:100,suffix:"%", label:"Client Focused"   },
             ].map(({ num, suffix, label }, i) => (
