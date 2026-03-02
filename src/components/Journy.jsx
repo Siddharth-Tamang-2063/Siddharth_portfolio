@@ -35,7 +35,7 @@ const MILESTONES = [
  * Journey — Scroll-triggered timeline section
  * Each card supports 3D tilt on mouse move.
  */
-const Journey = () => {
+const Journy = () => {
   useReveal();
 
   const handleMouseMove = (e) => {
@@ -140,4 +140,4 @@ const Journey = () => {
   );
 };
 
-export default Journey;
+export default Journy;

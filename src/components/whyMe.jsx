@@ -43,7 +43,7 @@ const CARDS = [
   },
 ];
 
-const WhyMe = () => {
+const whyMe = () => {
   useReveal();
 
   const handleMouseMove = (e) => {
@@ -168,4 +168,4 @@ const WhyMe = () => {
   );
 };
 
-export default WhyMe;
+export default whyMe;
