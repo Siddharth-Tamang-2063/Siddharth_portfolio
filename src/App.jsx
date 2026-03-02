@@ -11,7 +11,7 @@ import Marquee from "./components/Marquee";
 import Journey from "./components/Journy";
 import Work    from "./components/Work";
 import Skills  from "./components/Skills";
-import WhyMe   from "./components/WhyMe";
+import WhyMe   from "./components/whyMe";
 import Contact from "./components/Contact";
 import Footer  from "./components/Footer";
 
