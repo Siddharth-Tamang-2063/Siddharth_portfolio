@@ -10,11 +10,13 @@ app.use(express.json());
 app.use(cors());
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
+  host:   "smtp.gmail.com",
+  port:   587,        // ✅ Railway allows this
+  secure: false,
+  auth: { 
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_PASS,
-  },
+  }
 });
 
 app.post("/api/contact", async (req, res) => {
