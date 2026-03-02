@@ -1,7 +1,7 @@
 import express from "express";
-import nodemailer from "nodemailer";
 import cors from "cors";
 import dotenv from "dotenv";
+import { Resend } from "resend";
 
 dotenv.config();
 
@@ -9,15 +9,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const transporter = nodemailer.createTransport({
-  host:   "smtp.gmail.com",
-  port:   587,        // ✅ Railway allows this
-  secure: false,
-  auth: { 
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_PASS,
-  }
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 app.post("/api/contact", async (req, res) => {
   const { name, email, msg } = req.body;
@@ -27,8 +19,8 @@ app.post("/api/contact", async (req, res) => {
   }
 
   try {
-    await transporter.sendMail({
-      from:    `"Portfolio Contact" <${process.env.GMAIL_USER}>`,
+    await resend.emails.send({
+      from:    "Portfolio <onboarding@resend.dev>",
       to:      process.env.GMAIL_USER,
       subject: `New message from ${name}`,
       html: `
