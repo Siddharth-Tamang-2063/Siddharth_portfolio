@@ -9,6 +9,7 @@ const SOCIALS = [
 ];
 
 const Contact = () => {
+
   useReveal();
 
   const [form, setForm]       = useState({ name: "", email: "", msg: "" });
@@ -16,6 +17,7 @@ const Contact = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError]     = useState("");
 
+  console.log("API URL:", import.meta.env.VITE_API_URL);
   const update = (key) => (e) => setForm({ ...form, [key]: e.target.value });
 
   const handleSubmit = async () => {
