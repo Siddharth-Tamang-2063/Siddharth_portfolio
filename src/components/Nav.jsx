@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 const NAV_LINKS = [
   ["Work",    "#work"],
-  ["Journey", "#journey"],
+  ["About", "#about"],
   ["Skills",  "#skills"],
   ["Contact", "#contact"],
 ];

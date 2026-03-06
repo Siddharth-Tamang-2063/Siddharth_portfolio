@@ -8,7 +8,7 @@ import Loader  from "./components/Loader";
 import Nav     from "./components/Nav";
 import Hero    from "./components/Hero";
 import Marquee from "./components/Marquee";
-import Journey from "./components/Journy";
+import AboutMe from "./components/AboutMe";
 import Work    from "./components/Work";
 import Skills  from "./components/Skills";
 import WhyMe   from "./components/whyMe";
@@ -33,7 +33,7 @@ export default function App() {
           <main>
             <Hero />
             <Marquee />
-            <Journey />
+            <AboutMe />
             <Work />
             <Skills />
             <WhyMe />
