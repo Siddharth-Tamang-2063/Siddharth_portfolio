@@ -36,7 +36,7 @@ const PROJECTS = [
     col:    "#CBFF5E",
     tech:   ["React", "Tailwind", "Vite"],
     result: "Media agency website. Services, portfolio & branding.",
-    link:   "https://buzzcraftmedia.vercel.app/",
+    link:   "https://buzzcraft-media.vercel.app/",
   },
 ];
 
