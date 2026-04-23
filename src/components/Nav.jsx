@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 const NAV_LINKS = [
   ["Work",    "#work"],
-  ["About", "#about"],
+  ["About",   "#about"],
   ["Skills",  "#skills"],
   ["Contact", "#contact"],
 ];
@@ -50,21 +50,28 @@ const styles = `
     font-weight: 800;
     font-size: 20px;
     letter-spacing: -.04em;
-    color: var(--ink);
+    color: #fff;
     text-decoration: none;
     display: flex;
     align-items: center;
     gap: 1px;
     user-select: none;
+    background: var(--ink);
+    padding: 7px 14px 7px 13px;
+    border-radius: 100px;
+    transition: transform .25s cubic-bezier(.34,1.56,.64,1);
+  }
+  .nav-logo:hover {
+    transform: scale(1.05);
   }
   .nav-logo-dot {
     display: inline-block;
-    width: 8px;
-    height: 8px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
     background: var(--lime);
     margin-left: 2px;
-    margin-bottom: 10px;
+    margin-bottom: 9px;
     transition: transform .3s cubic-bezier(.34,1.56,.64,1);
   }
   .nav-logo:hover .nav-logo-dot {
@@ -76,6 +83,11 @@ const styles = `
     display: flex;
     align-items: center;
     gap: 2px;
+    background: #F4F1EC;
+    border: 0.5px solid rgba(17,17,16,.12);
+    border-radius: 100px;
+    padding: 5px 6px;
+    box-shadow: 0 1px 4px rgba(17,17,16,.06);
   }
   .nav-link {
     font-family: 'DM Sans', sans-serif;
@@ -84,7 +96,7 @@ const styles = `
     letter-spacing: -.01em;
     color: var(--muted);
     text-decoration: none;
-    padding: 7px 14px;
+    padding: 7px 16px;
     border-radius: 100px;
     position: relative;
     transition: color .2s, background .2s;
@@ -143,14 +155,14 @@ const styles = `
     padding: 0;
     z-index: 1100;
   }
-  .nav-hamburger span {
+.nav-hamburger span {
     display: block;
     width: 22px;
     height: 2px;
-    background: var(--ink);
+    background: #F4F1EC;  /* ← was var(--ink) */
     border-radius: 2px;
     transition: all .3s cubic-bezier(.16,1,.3,1);
-  }
+}
   .nav-hamburger.open span:nth-child(1) {
     transform: translateY(7px) rotate(45deg);
   }
@@ -219,9 +231,9 @@ const styles = `
   }
 
   @media (max-width: 640px) {
-    .nav-links  { display: none; }
-    .nav-cta    { display: none; }
-    .nav-inner  { padding: 0 20px; }
+    .nav-links    { display: none; }
+    .nav-cta      { display: none; }
+    .nav-inner    { padding: 0 20px; }
     .nav-hamburger { display: flex; }
     .nav-drawer    { display: flex; }
   }

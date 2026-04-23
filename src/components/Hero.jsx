@@ -1,517 +1,531 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Me from "../assets/me.png";
 
-/* ─── CSS Variables + Global Styles ─── */
-const GlobalStyles = () => (
-  <style>{`
-    :root {
-      --cream:  #f5f2eb;
-      --white:  #ffffff;
-      --ink:    #111110;
-      --ink2:   #3a3a38;
-      --lime:   #cbff5e;
-      --muted:  #888880;
-      --border: rgba(17,17,16,.1);
-    }
+gsap.registerPlugin(ScrollTrigger);
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { overflow-x: hidden; }
+const stickers = [
+  {
+    id: 1,
+    label: "REACT &\nNEXT.JS",
+    sub: "BUILDING → FAST & SCALABLE APPS",
+    bg: "#5ecfcf",
+    color: "#000",
+    shape: "circle",
+    style: { top: "12%", left: "8%" },
+    mobileStyle: { top: "6%", left: "2%", transform: "scale(0.7)" },
+    rotate: -8,
+  },
+  {
+    id: 2,
+    label: "UI/UX\nDESIGN©",
+    bg: "#f06292",
+    color: "#fff",
+    shape: "rect",
+    style: { top: "10%", right: "30%" },
+    mobileStyle: { top: "4%", right: "2%" },
+    rotate: 4,
+  },
+  {
+    id: 3,
+    label: "DESIGN\nSYSTEMS\n©'24",
+    bg: "#5ecfcf",
+    color: "#000",
+    shape: "rect",
+    style: { top: "12%", right: "4%" },
+    mobileStyle: null,
+    rotate: -3,
+  },
+  {
+    id: 4,
+    label: "FIGMA &\nⓔ PROTOTYPING",
+    sub: "WWW. ↗",
+    bg: "#f5e642",
+    color: "#000",
+    shape: "rect",
+    style: { top: "44%", left: "4%" },
+    mobileStyle: { bottom: "28%", left: "2%" },
+    rotate: -5,
+  },
+  {
+    id: 5,
+    label: "CSS &\nTAILWIND\n→ STYLING",
+    bg: "#f4833d",
+    color: "#fff",
+    shape: "rect",
+    style: { bottom: "18%", left: "8%" },
+    mobileStyle: null,
+    rotate: 3,
+  },
+  {
+    id: 6,
+    label: "WEB\nPERFORMANCE",
+    bg: "#b5e550",
+    color: "#000",
+    shape: "circle",
+    style: { bottom: "10%", right: "14%" },
+    mobileStyle: { bottom: "22%", right: "2%", transform: "scale(0.72)" },
+    rotate: -15,
+  },
+];
 
-    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap');
+export default function PortfolioHero() {
+  const containerRef = useRef(null);
+  const titleRef = useRef(null);
+  const heroTextRef = useRef(null);
+  const stickersRef = useRef([]);
+  const ctaRef = useRef(null);
+  const bottomPanelRef = useRef(null);
+  const photoRef = useRef(null);
 
-    .syne { font-family: 'Syne', sans-serif; }
-    .mono { font-family: 'DM Mono', monospace; }
+  const bottomPanelStyle = {
+    background: "#e8e4dc",
+    position: "relative",
+    minHeight: 480,
+    overflow: "hidden",
+    backgroundImage:
+      "linear-gradient(rgba(0,0,0,0.12) 1px, transparent 1px)," +
+      "linear-gradient(90deg, rgba(0,0,0,0.12) 1px, transparent 1px)",
+    backgroundSize: "40px 40px",
+  };
 
-    .lbadge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 16px;
-      border: 1px solid var(--border);
-      border-radius: 100px;
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: var(--ink2);
-      background: var(--white);
-    }
-    .ldot {
-      width: 7px; height: 7px; border-radius: 50%;
-      background: var(--lime);
-      box-shadow: 0 0 8px rgba(203,255,94,.8);
-      animation: ldotPulse 2s ease-in-out infinite;
-    }
-    @keyframes ldotPulse {
-      0%,100% { box-shadow: 0 0 8px rgba(203,255,94,.8); }
-      50%      { box-shadow: 0 0 18px rgba(203,255,94,1); }
-    }
-
-    .bink {
-      display: inline-flex; align-items: center;
-      padding: 14px 28px;
-      background: var(--ink);
-      color: var(--cream);
-      font-family: 'DM Mono', monospace;
-      font-size: 13px;
-      letter-spacing: .06em;
-      text-decoration: none;
-      border-radius: 4px;
-      transition: background .2s, transform .2s;
-      white-space: nowrap;
-    }
-    .bink:hover { background: #2a2a28; transform: translateY(-2px); }
-
-    .bghost {
-      display: inline-flex; align-items: center;
-      padding: 14px 28px;
-      background: transparent;
-      color: var(--ink);
-      font-family: 'DM Mono', monospace;
-      font-size: 13px;
-      letter-spacing: .06em;
-      text-decoration: none;
-      border-radius: 4px;
-      border: 1px solid var(--ink);
-      transition: background .2s, color .2s, transform .2s;
-      white-space: nowrap;
-    }
-    .bghost:hover { background: var(--ink); color: var(--cream); transform: translateY(-2px); }
-
-    /* ── Keyframes ── */
-    @keyframes charUp {
-      from { opacity:0; transform: translateY(110%) skewY(4deg); }
-      to   { opacity:1; transform: translateY(0%)  skewY(0deg); }
-    }
-    @keyframes lineExpand {
-      from { transform: scaleX(0); transform-origin: left; }
-      to   { transform: scaleX(1); transform-origin: left; }
-    }
-    @keyframes badgePop {
-      from { opacity:0; transform: scale(.7) translateY(10px); }
-      to   { opacity:1; transform: scale(1)  translateY(0); }
-    }
-    @keyframes subtleDrift {
-      0%,100% { transform: translate(0,0) rotate(0deg); }
-      33%      { transform: translate(18px,-12px) rotate(1.5deg); }
-      66%      { transform: translate(-10px,8px)  rotate(-.8deg); }
-    }
-    @keyframes rotateSlowCW  { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-    @keyframes rotateSlowCCW { from{transform:rotate(0deg)} to{transform:rotate(-360deg)} }
-    @keyframes glowPulse {
-      0%,100% { opacity:.18; transform:scale(1); }
-      50%      { opacity:.28; transform:scale(1.08); }
-    }
-    @keyframes statsReveal {
-      from { opacity:0; transform:translateY(24px); }
-      to   { opacity:1; transform:translateY(0); }
-    }
-    @keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
-    @keyframes fadeUp  {
-      from { opacity:0; transform:translateY(24px); }
-      to   { opacity:1; transform:translateY(0); }
-    }
-    @keyframes heroScrollHint {
-      0%   { opacity:0; transform:translateY(-6px); }
-      50%  { opacity:1; transform:translateY(0); }
-      100% { opacity:0; transform:translateY(6px); }
-    }
-
-    .hero-char       { display: inline-block; overflow: hidden; }
-    .hero-char-inner {
-      display: inline-block;
-      animation: charUp .85s cubic-bezier(.16,1,.3,1) both;
-    }
-
-    /* ── Responsive ── */
-    @media (max-width: 768px) {
-      .hero-main-pad   { padding: 0 24px !important; }
-      .hero-bottom-row { grid-template-columns: 1fr !important; gap: 24px !important; }
-      .hero-ctas       { justify-content: flex-start !important; flex-wrap: wrap !important; }
-      .hero-ctas a     { flex: 1 1 auto; text-align: center; justify-content: center; }
-      .hero-stats      { grid-template-columns: repeat(2,1fr) !important; padding: 0 24px !important; }
-      .hero-stat-item  { border-right: none !important; padding-left: 0 !important; padding-right: 0 !important; }
-      .hero-stat-item:nth-child(odd)  { border-right: 1px solid var(--border) !important; padding-right: 16px !important; }
-      .hero-stat-item:nth-child(even) { padding-left: 16px !important; }
-      .hero-scroll-hint { display: none !important; }
-      .hero-top-row    { margin-bottom: 28px !important; }
-      .hero-rotating-badge { display: none !important; }
-      .hero-desc       { max-width: 100% !important; }
-      .hero-nepal-tag  { display: none !important; }
-    }
-
-    @media (max-width: 480px) {
-      .hero-main-pad { padding: 0 16px !important; }
-      .hero-stats    { padding: 0 16px !important; }
-      .bink, .bghost { padding: 13px 20px; font-size: 12px; width: 100%; justify-content: center; }
-    }
-  `}</style>
-);
-
-/* ─── Magnetic wrapper (inlined, no external dep) ─── */
-const Mag = ({ children, strength = 28 }) => {
-  const ref = useRef(null);
-
-  const onMove = useCallback((e) => {
-    const el = ref.current;
-    if (!el) return;
-    const r = el.getBoundingClientRect();
-    const x = e.clientX - (r.left + r.width / 2);
-    const y = e.clientY - (r.top  + r.height / 2);
-    el.style.transform = `translate(${x * 0.28}px, ${y * 0.28}px)`;
-  }, []);
-
-  const onLeave = useCallback(() => {
-    if (ref.current) ref.current.style.transform = "translate(0,0)";
-  }, []);
-
-  return (
-    <div
-      ref={ref}
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
-      style={{ transition: "transform .35s cubic-bezier(.25,1,.5,1)", display:"inline-block" }}
-    >
-      {children}
-    </div>
-  );
-};
-
-/* ─── Split text into animated chars ─── */
-const SplitText = ({ text, baseDelay = 0, style = {} }) => (
-  <span style={{ display: "inline-block", ...style }}>
-    {text.split("").map((ch, i) => (
-      <span key={i} className="hero-char">
-        <span
-          className="hero-char-inner"
-          style={{ animationDelay: `${baseDelay + i * 0.032}s` }}
-        >
-          {ch === " " ? "\u00A0" : ch}
-        </span>
-      </span>
-    ))}
-  </span>
-);
-
-/* ─── Rotating badge ─── */
-const RotatingBadge = () => (
-  <div
-    className="hero-rotating-badge"
-    style={{ position: "relative", width: 120, height: 120, flexShrink: 0 }}
-  >
-    <svg
-      viewBox="0 0 120 120"
-      style={{
-        position: "absolute", inset: 0,
-        animation: "rotateSlowCW 18s linear infinite",
-      }}
-    >
-      <defs>
-        <path id="badge-circle" d="M 60,60 m -42,0 a 42,42 0 1,1 84,0 a 42,42 0 1,1 -84,0" />
-      </defs>
-      <text fill="var(--muted)" fontSize="10.5" fontFamily="'DM Mono',monospace" letterSpacing="3.2" fontWeight="500">
-        <textPath href="#badge-circle">AVAILABLE FOR WORK • NEPAL • 2025 • </textPath>
-      </text>
-    </svg>
-    <div style={{
-      position: "absolute", inset: 0,
-      display: "flex", alignItems: "center", justifyContent: "center",
-    }}>
-      <div style={{
-        width: 44, height: 44, borderRadius: "50%",
-        background: "var(--lime)",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        boxShadow: "0 0 28px rgba(203,255,94,.5)",
-        animation: "rotateSlowCCW 18s linear infinite",
-      }}>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink)" strokeWidth="2.5" strokeLinecap="round">
-          <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
-          <polyline points="16 7 22 7 22 13" />
-        </svg>
-      </div>
-    </div>
-  </div>
-);
-
-/* ─── Animated counter — supports decimals ─── */
-const Counter = ({ target, suffix = "", delay = 0 }) => {
-  const [val, setVal]   = useState(0);
-  const ref             = useRef(null);
-  const isDecimal       = !Number.isInteger(target);
+  const isMobile = () => window.innerWidth <= 768;
 
   useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => {
-      if (!e.isIntersecting) return;
-      let frame = 0;
-      const total = 45;
-      const timer = setInterval(() => {
-        frame++;
-        const progress = frame / total;
-        const eased    = 1 - Math.pow(1 - progress, 3);
-        const current  = target * eased;
-        if (frame >= total) { setVal(target); clearInterval(timer); }
-        else setVal(isDecimal ? Math.round(current * 10) / 10 : Math.floor(current));
-      }, 30);
-      obs.disconnect();
-    }, { threshold: .5 });
-    if (ref.current) obs.observe(ref.current);
-    return () => obs.disconnect();
-  }, [target, delay, isDecimal]);
+    const ctx = gsap.context(() => {
+      try {
+        // ── TITLE: character split ──
+        const titleEl = titleRef.current;
+        if (!titleEl) return;
+
+        const rawText = titleEl.innerText;
+        const lines = rawText.split("\n");
+        titleEl.innerHTML = lines
+          .map(
+            (line) =>
+              `<span style="display:block;overflow:hidden;"><span class="line-inner" style="display:block;">${[
+                ...line,
+              ]
+                .map(
+                  (ch) =>
+                    `<span class="char" style="display:inline-block;">${
+                      ch === " " ? "&nbsp;" : ch
+                    }</span>`,
+                )
+                .join("")}</span></span>`,
+          )
+          .join("");
+
+        const chars = titleEl.querySelectorAll(".char");
+        gsap.from(chars, {
+          y: 120,
+          rotateX: -90,
+          opacity: 0,
+          duration: 0.9,
+          ease: "expo.out",
+          stagger: { each: 0.03, from: "start" },
+          delay: 0.1,
+        });
+
+        // ── SUBTEXT ──
+        if (heroTextRef.current?.children) {
+          gsap.from(heroTextRef.current.children, {
+            opacity: 0,
+            y: 40,
+            duration: 0.7,
+            stagger: 0.12,
+            ease: "power3.out",
+            delay: 0.7,
+          });
+        }
+
+        // ── CTA ──
+        if (ctaRef.current) {
+          gsap.from(ctaRef.current, {
+            opacity: 0,
+            x: 30,
+            duration: 0.6,
+            ease: "power3.out",
+            delay: 0.9,
+          });
+        }
+
+        // ── BOTTOM PANEL ──
+        if (bottomPanelRef.current) {
+          gsap.from(bottomPanelRef.current, {
+            y: 80,
+            opacity: 0,
+            duration: 1,
+            ease: "expo.out",
+            delay: 0.4,
+          });
+        }
+
+        // ── PHOTO ──
+        if (photoRef.current) {
+          gsap.from(photoRef.current, {
+            scale: 0.85,
+            opacity: 0,
+            duration: 1.2,
+            ease: "expo.out",
+            delay: 0.5,
+          });
+        }
+
+        // ── STICKERS: elastic pop-in ──
+        const visibleStickers = stickersRef.current.filter(Boolean);
+        gsap.from(visibleStickers, {
+          opacity: 0,
+          scale: 0,
+          duration: 0.7,
+          ease: "elastic.out(1, 0.5)",
+          stagger: { each: 0.1, from: "random" },
+          delay: 1.0,
+        });
+
+        // ── STICKERS: continuous float ──
+        visibleStickers.forEach((el, i) => {
+          gsap.to(el, {
+            y: `${i % 2 === 0 ? -12 : 12}`,
+            x: `${i % 3 === 0 ? -4 : 4}`,
+            rotation: `+=${i % 2 === 0 ? 2 : -2}`,
+            duration: 2.2 + i * 0.35,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut",
+            delay: i * 0.18,
+          });
+        });
+
+        // ── MAGNETIC STICKERS (desktop) ──
+        if (!isMobile()) {
+          visibleStickers.forEach((el) => {
+            el.addEventListener("mousemove", (e) => {
+              const rect = el.getBoundingClientRect();
+              const cx = rect.left + rect.width / 2;
+              const cy = rect.top + rect.height / 2;
+              gsap.to(el, {
+                x: (e.clientX - cx) * 0.35,
+                y: (e.clientY - cy) * 0.35,
+                duration: 0.3,
+                ease: "power2.out",
+                overwrite: "auto",
+              });
+            });
+            el.addEventListener("mouseleave", () => {
+              gsap.to(el, {
+                x: 0,
+                y: 0,
+                duration: 0.6,
+                ease: "elastic.out(1, 0.4)",
+                overwrite: "auto",
+              });
+            });
+          });
+        }
+
+        // ── PARALLAX on mouse (desktop) ──
+        if (!isMobile()) {
+          const onMouseMove = (e) => {
+            const { innerWidth: W, innerHeight: H } = window;
+            const nx = (e.clientX / W - 0.5) * 2;
+            const ny = (e.clientY / H - 0.5) * 2;
+            visibleStickers.forEach((el, i) => {
+              gsap.to(el, {
+                x: nx * (8 + i * 3),
+                y: ny * (8 + i * 3),
+                duration: 1,
+                ease: "power2.out",
+                overwrite: false,
+              });
+            });
+            if (photoRef.current) {
+              gsap.to(photoRef.current, {
+                x: nx * 6,
+                y: ny * 4,
+                duration: 1.2,
+                ease: "power2.out",
+              });
+            }
+          };
+          window.addEventListener("mousemove", onMouseMove);
+          return () => window.removeEventListener("mousemove", onMouseMove);
+        }
+
+        // ── SCROLL: title parallax ──
+        ScrollTrigger.create({
+          trigger: containerRef.current,
+          start: "top top",
+          end: "bottom top",
+          onUpdate: (self) => {
+            if (titleRef.current) {
+              gsap.to(titleRef.current, {
+                y: -self.progress * 60,
+                opacity: 1 - self.progress * 0.6,
+                duration: 0.1,
+                overwrite: true,
+              });
+            }
+          },
+        });
+      } catch (err) {
+        console.error("GSAP animation error:", err);
+      }
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <span ref={ref} className="syne" style={{ fontVariantNumeric: "tabular-nums" }}>
-      {isDecimal ? val.toFixed(1) : val}{suffix}
-    </span>
-  );
-};
+    <>
+      <style>{`
+        @keyframes spinSlow {
+          from { transform: translate(-50%,-50%) rotate(0deg); }
+          to   { transform: translate(-50%,-50%) rotate(360deg); }
+        }
+        * { box-sizing: border-box; }
 
-/* ─── Hero ─── */
-const Hero = () => (
-  <>
-    <GlobalStyles />
-    <section
-      id="home"
-      style={{
-        minHeight:      "100vh",
-        background:     "var(--cream)",
-        position:       "relative",
-        overflow:       "hidden",
-        display:        "flex",
-        flexDirection:  "column",
-        justifyContent: "center",
-        padding:        "120px 0 0",
-      }}
-    >
-      {/* ── Background watermark ── */}
-      <div style={{
-        position:         "absolute",
-        top:              "50%",
-        left:             "50%",
-        transform:        "translate(-50%,-50%)",
-        fontSize:         "clamp(80px,20vw,260px)",
-        fontFamily:       "'Syne',sans-serif",
-        fontWeight:       800,
-        color:            "transparent",
-        WebkitTextStroke: "1px rgba(17,17,16,.055)",
-        letterSpacing:    "-.05em",
-        whiteSpace:       "nowrap",
-        pointerEvents:    "none",
-        userSelect:       "none",
-        zIndex:           0,
-        animation:        "glowPulse 8s ease-in-out infinite",
-        lineHeight:       1,
-      }}>
-        DEV
-      </div>
+        .hero-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr auto;
+          gap: 24px;
+          padding: 24px 40px 30px;
+          align-items: end;
+        }
+        .hero-cta { white-space: nowrap; }
 
-      {/* ── Decorative grid lines ── */}
-      <div style={{ position:"absolute", inset:0, pointerEvents:"none", zIndex:0 }}>
-        <div style={{ position:"absolute", left:"7%",  top:0, bottom:0, width:"1px", background:"var(--border)" }} />
-        <div style={{ position:"absolute", right:"7%", top:0, bottom:0, width:"1px", background:"var(--border)" }} />
-        <div style={{ position:"absolute", top:"18%",  left:"7%", right:"7%", height:"1px", background:"var(--border)" }} />
-      </div>
+        @media (max-width: 768px) {
+          .hero-grid {
+            grid-template-columns: 1fr;
+            gap: 14px;
+            padding: 20px 20px 24px;
+          }
+          .hero-cta { justify-self: start; }
+          .hero-title-wrap { padding: 28px 20px 0 !important; }
+          .bottom-panel { min-height: 380px !important; }
+          .photo-wrap {
+            width: 200px !important;
+            height: 300px !important;
+            border-radius: 100px 100px 0 0 !important;
+          }
+          .circle-cutout {
+            width: 340px !important;
+            height: 340px !important;
+            top: -30px !important;
+            right: -60px !important;
+          }
+        }
 
-      {/* ── Ambient blobs ── */}
-      <div style={{
-        position:"absolute", top:"-20%", right:"-12%",
-        width:"70vmin", height:"70vmin", borderRadius:"50%",
-        background:"radial-gradient(circle,rgba(203,255,94,.16) 0%,transparent 68%)",
-        pointerEvents:"none", zIndex:0,
-        animation:"subtleDrift 20s ease-in-out infinite",
-      }} />
-      <div style={{
-        position:"absolute", bottom:"-15%", left:"-8%",
-        width:"55vmin", height:"55vmin", borderRadius:"50%",
-        background:"radial-gradient(circle,rgba(96,165,250,.08) 0%,transparent 68%)",
-        pointerEvents:"none", zIndex:0,
-        animation:"subtleDrift 25s ease-in-out infinite reverse",
-      }} />
+        @media (max-width: 480px) {
+          .hero-grid { padding: 16px 16px 20px; gap: 12px; }
+          .hero-title-wrap { padding: 20px 16px 0 !important; }
+          .bottom-panel { min-height: 320px !important; }
+          .photo-wrap {
+            width: 160px !important;
+            height: 240px !important;
+            border-radius: 80px 80px 0 0 !important;
+          }
+          .circle-cutout {
+            width: 260px !important;
+            height: 260px !important;
+            top: -20px !important;
+            right: -40px !important;
+          }
+        }
 
-      {/* ── Main content ── */}
+        @media (max-width: 768px) {
+          .sticker-desktop-only { display: none !important; }
+        }
+      `}</style>
+
       <div
-        className="hero-main-pad"
-        style={{ maxWidth:"1280px", margin:"0 auto", width:"100%", padding:"0 60px", position:"relative", zIndex:1 }}
-      >
-
-        {/* Top row */}
-        <div
-          className="hero-top-row"
-          style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"48px" }}
-        >
-          <div style={{ animation:"badgePop .7s cubic-bezier(.34,1.56,.64,1) .2s both" }}>
-            <span className="lbadge">
-              <span className="ldot" />
-              Open for Freelance
-            </span>
-          </div>
-          <div style={{ animation:"badgePop .7s cubic-bezier(.34,1.56,.64,1) .35s both" }}>
-            <RotatingBadge />
-          </div>
-        </div>
-
-        {/* ── Giant headline ── */}
-        <div style={{ marginBottom:"40px" }}>
-          <div style={{
-            height:"1px", background:"var(--ink)", marginBottom:"20px",
-            animation:"lineExpand 1s cubic-bezier(.16,1,.3,1) .3s both",
-          }} />
-
-          {/* Line 1 — Web Developer */}
-          <div style={{ overflow:"hidden", lineHeight:.88, marginBottom:"0.06em" }}>
-            <div
-              className="syne"
-              style={{
-                fontSize:"min(5.8vw, 148px)",
-                fontWeight:800, letterSpacing:"-.045em", lineHeight:.88,
-                whiteSpace:"nowrap",
-              }}
-            >
-              <SplitText text="Web Developer" baseDelay={0.5} />
-              <span
-                className="mono hero-nepal-tag"
-                style={{
-                  fontSize:"clamp(10px, 1vw, 16px)", fontWeight:400,
-                  color:"var(--muted)", letterSpacing:".08em",
-                  marginLeft:"0.5em",
-                  animation:"fadeIn .6s ease 1.2s both", opacity:0,
-                }}
-              >
-                / Nepal
-              </span>
-            </div>
-          </div>
-
-          {/* Line 2 — & UI/UX Designer */}
-          <div style={{ overflow:"hidden", lineHeight:.88 }}>
-            <div
-              className="syne"
-              style={{
-                fontSize:"min(5.8vw, 148px)",
-                fontWeight:800, letterSpacing:"-.045em",
-                fontStyle:"italic", lineHeight:.88,
-                whiteSpace:"nowrap",
-              }}
-            >
-              <SplitText text="& UI/UX Designer" baseDelay={0.65} style={{ color:"var(--ink2)" }} />
-              <span style={{
-                color:"var(--lime)",
-                animation:"charUp .6s cubic-bezier(.16,1,.3,1) 1.35s both",
-                display:"inline-block", marginLeft:"4px",
-                filter:"drop-shadow(0 0 16px rgba(203,255,94,.7))",
-              }}>.</span>
-            </div>
-          </div>
-
-          <div style={{
-            height:"1px", background:"var(--border)", marginTop:"20px",
-            animation:"lineExpand 1s cubic-bezier(.16,1,.3,1) .9s both",
-          }} />
-        </div>
-
-        {/* ── Bottom row: description + CTAs ── */}
-        <div
-          className="hero-bottom-row"
-          style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"40px", alignItems:"center", marginBottom:"48px" }}
-        >
-          <p
-            className="hero-desc"
-            style={{
-              fontSize:"clamp(14px,1.2vw,17px)", lineHeight:1.8,
-              color:"var(--muted)",
-              animation:"fadeUp .9s ease 1.1s both", opacity:0,
-              maxWidth:"420px",
-            }}
-          >
-            I build websites that look stunning and work perfectly — from the design
-            you see to the code that runs it. Whether you need a brand new site or a
-            fresh look, I've got you covered.
-          </p>
-
-          <div
-            className="hero-ctas"
-            style={{
-              display:"flex", gap:"12px", flexWrap:"wrap", justifyContent:"flex-end",
-              animation:"fadeUp .9s ease 1.25s both", opacity:0,
-            }}
-          >
-            <Mag><a href="#work"    className="bink">View Work →</a></Mag>
-            <Mag><a href="#contact" className="bghost">Hire Me</a></Mag>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Stats strip ── */}
-      <div style={{
-        marginTop:"auto", borderTop:"1px solid var(--border)",
-        background:"var(--white)", position:"relative", zIndex:1,
-      }}>
-        <div
-          className="hero-stats"
-          style={{
-            maxWidth:"1280px", margin:"0 auto",
-            display:"grid", gridTemplateColumns:"repeat(4,1fr)",
-            padding:"0 60px",
-          }}
-        >
-          {[
-            { num:5,   suffix:"+", label:"Projects Shipped" },
-            { num:1.5, suffix:"+", label:"Years Building"   },
-            { num:5,   suffix:"+", label:"Happy Clients"    },
-            { num:100, suffix:"%", label:"Client Focused"   },
-          ].map(({ num, suffix, label }, i) => (
-            <div
-              key={label}
-              className="hero-stat-item"
-              style={{
-                padding:"28px 0",
-                borderRight: i < 3 ? "1px solid var(--border)" : "none",
-                paddingLeft:  i > 0 ? "40px" : "0",
-                animation:`statsReveal .7s cubic-bezier(.16,1,.3,1) ${1.4 + i * .1}s both`,
-                opacity:0,
-              }}
-            >
-              <div
-                className="syne"
-                style={{ fontSize:"clamp(22px,2.8vw,42px)", fontWeight:800, letterSpacing:"-.03em", lineHeight:1 }}
-              >
-                <Counter target={num} suffix={suffix} delay={i * 0.1} />
-              </div>
-              <div className="mono" style={{ fontSize:"11px", color:"var(--muted)", marginTop:"6px", letterSpacing:".04em", textTransform:"uppercase" }}>
-                {label}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ── Scroll hint ── */}
-      <div
-        className="hero-scroll-hint"
+        ref={containerRef}
         style={{
-          position:"absolute", bottom:"100px", right:"60px",
-          display:"flex", flexDirection:"column", alignItems:"center", gap:"8px",
-          animation:"fadeIn .6s ease 2s both", opacity:0, zIndex:1,
+          fontFamily: "'Arial Black', 'Helvetica Neue', sans-serif",
+          background: "#0a0a0a",
+          minHeight: "100vh",
+          overflow: "hidden",
+          userSelect: "none",
         }}
       >
-        <div
-          className="mono"
-          style={{
-            writingMode:"vertical-rl", fontSize:"10px",
-            letterSpacing:".22em", color:"var(--muted)", textTransform:"uppercase",
-          }}
-        >
-          Scroll
+        {/* ── HERO TITLE ── */}
+        <div className="hero-title-wrap" style={{ padding: "40px 40px 0" }}>
+          <h1
+            ref={titleRef}
+            style={{
+              color: "#F4F1EC",
+              fontSize: "clamp(38px, 10vw, 120px)",
+              paddingTop: 20,
+              fontWeight: 900,
+              lineHeight: 0.9,
+              letterSpacing: "-0.02em",
+              margin: 0,
+              textTransform: "uppercase",
+              perspective: "600px",
+            }}
+          >
+            FRONTEND <br/>DEVELOPER
+          </h1>
         </div>
-        <div style={{ width:"1px", height:"48px", background:"var(--border)", position:"relative", overflow:"hidden" }}>
-          <div style={{
-            position:"absolute", top:0, width:"100%", height:"40%",
-            background:"var(--ink)",
-            animation:"heroScrollHint 1.8s ease-in-out infinite",
-          }} />
+
+        {/* ── HERO SUBTEXT ── */}
+        <div ref={heroTextRef} className="hero-grid">
+          <p style={{ color: "#ccc", fontSize: 14, lineHeight: 1.6, margin: 0, maxWidth: 360 }}>
+            I craft pixel-perfect interfaces and intuitive user experiences
+            using React, Tawilwind CSSS and GSAP — bridging the gap between
+            design and engineering with precision.
+          </p>
+          <p style={{ color: "#ccc", fontSize: 14, lineHeight: 1.6, margin: 0, maxWidth: 360 }}>
+            I'm frontend developer who turns Figma concepts
+            into fast, accessible, and beautifully animated web products that
+            users love.
+          </p>
+
+          {/* ✅ FIXED: restored missing opening <a tag */}
+          <a
+            ref={ctaRef}
+            href="#"
+            className="hero-cta"
+            style={{
+              color: "#fff",
+              textDecoration: "none",
+              fontSize: 13,
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              borderBottom: "1px solid #fff",
+              paddingBottom: 2,
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              transition: "gap 0.2s",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.gap = "14px")}
+            onMouseLeave={(e) => (e.currentTarget.style.gap = "6px")}
+          >
+            GET IN TOUCH <span style={{ fontSize: 16 }}>→</span>
+          </a>
+        </div>
+
+        {/* ── BOTTOM PANEL ── */}
+        <div ref={bottomPanelRef} className="bottom-panel" style={bottomPanelStyle}>
+          <div
+            className="circle-cutout"
+            style={{
+              position: "absolute",
+              top: -60,
+              right: -100,
+              width: 560,
+              height: 560,
+              borderRadius: "50%",
+              background: "#0a0a0a",
+              zIndex: 0,
+            }}
+          />
+
+          <div
+            ref={photoRef}
+            className="photo-wrap"
+            style={{
+              position: "absolute",
+              left: "50%",
+              transform: "translateX(-50%)",
+              bottom: 0,
+              width: 280,
+              height: 420,
+              zIndex: 1,
+              overflow: "hidden",
+              borderRadius: "140px 140px 0 0",
+              border: "3px solid rgba(0,0,0,0.15)",
+            }}
+          >
+            <img
+              src={Me}
+              alt="Profile"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: "center top",
+                filter: "grayscale(20%) contrast(1.05)",
+              }}
+            />
+          </div>
+
+          {stickers.map((s, i) => {
+            const isHidden = s.mobileStyle === null;
+            return (
+              <div
+                key={s.id}
+                ref={(el) => (stickersRef.current[i] = el)}
+                className={isHidden ? "sticker-desktop-only" : ""}
+                style={{
+                  position: "absolute",
+                  ...s.style,
+                  background: s.bg,
+                  color: s.color,
+                  padding: s.shape === "circle" ? "30px 20px" : "14px 18px",
+                  borderRadius: s.shape === "circle" ? "50%" : "6px",
+                  width: s.shape === "circle" ? 120 : "auto",
+                  height: s.shape === "circle" ? 120 : "auto",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  transform: `rotate(${s.rotate}deg)`,
+                  zIndex: 2,
+                  cursor: "pointer",
+                  boxShadow: "3px 4px 0 rgba(0,0,0,0.25)",
+                  transition: "box-shadow 0.2s",
+                  minWidth: s.shape === "rect" ? 130 : 0,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = "5px 7px 0 rgba(0,0,0,0.3)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = "3px 4px 0 rgba(0,0,0,0.25)";
+                }}
+              >
+                {s.shape === "circle" && (
+                  <div style={{ position: "absolute", top: 8, left: "50%", transform: "translateX(-50%)", fontSize: 18, opacity: 0.7 }}>
+                    ◑
+                  </div>
+                )}
+                <div
+                  style={{
+                    fontSize: s.shape === "circle" ? 13 : 14,
+                    fontWeight: 900,
+                    lineHeight: 1.25,
+                    letterSpacing: "0.02em",
+                    whiteSpace: "pre-line",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {s.label}
+                </div>
+                {s.sub && (
+                  <div style={{ fontSize: 9, fontWeight: 600, marginTop: 4, opacity: 0.75, letterSpacing: "0.04em", whiteSpace: "pre-line", textTransform: "uppercase" }}>
+                    {s.sub}
+                  </div>
+                )}
+                {s.shape === "circle" && (
+                  <svg viewBox="0 0 100 100" width="116" height="116"
+                    style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", opacity: 0.18, animation: "spinSlow 12s linear infinite" }}
+                  >
+                    <path id={`cp-${s.id}`} d="M 50,50 m -37,0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="none" />
+                    <text fontSize="11" fontWeight="700" fill={s.color} letterSpacing="3">
+                      <textPath href={`#cp-${s.id}`}>
+                        {s.id === 1 ? "★ REACT ★ NEXT.JS ★ FRONTEND" : "★ SPEED ★ PERF ★ LIGHTHOUSE"}
+                      </textPath>
+                    </text>
+                  </svg>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
-
-    </section>
-  </>
-);
-
-export default Hero;
+    </>
+  );
+}
