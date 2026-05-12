@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Me from "../assets/me.png";
@@ -14,7 +14,7 @@ const stickers = [
     color: "#000",
     shape: "circle",
     style: { top: "12%", left: "8%" },
-    mobileStyle: { top: "6%", left: "2%", transform: "scale(0.7)" },
+    mobileStyle: { top: "8%", left: "3%", transform: "scale(0.72)" },
     rotate: -8,
   },
   {
@@ -24,7 +24,7 @@ const stickers = [
     color: "#fff",
     shape: "rect",
     style: { top: "10%", right: "30%" },
-    mobileStyle: { top: "4%", right: "2%" },
+    mobileStyle: { top: "6%", right: "3%" },
     rotate: 4,
   },
   {
@@ -34,7 +34,7 @@ const stickers = [
     color: "#000",
     shape: "rect",
     style: { top: "12%", right: "4%" },
-    mobileStyle: null,
+    mobileStyle: null, // hidden on mobile
     rotate: -3,
   },
   {
@@ -45,7 +45,7 @@ const stickers = [
     color: "#000",
     shape: "rect",
     style: { top: "44%", left: "4%" },
-    mobileStyle: { bottom: "28%", left: "2%" },
+    mobileStyle: { bottom: "30%", left: "3%" },
     rotate: -5,
   },
   {
@@ -55,7 +55,7 @@ const stickers = [
     color: "#fff",
     shape: "rect",
     style: { bottom: "18%", left: "8%" },
-    mobileStyle: null,
+    mobileStyle: null, // hidden on mobile
     rotate: 3,
   },
   {
@@ -65,7 +65,7 @@ const stickers = [
     color: "#000",
     shape: "circle",
     style: { bottom: "10%", right: "14%" },
-    mobileStyle: { bottom: "22%", right: "2%", transform: "scale(0.72)" },
+    mobileStyle: { bottom: "24%", right: "3%", transform: "scale(0.72)" },
     rotate: -15,
   },
 ];
@@ -78,6 +78,15 @@ export default function PortfolioHero() {
   const ctaRef = useRef(null);
   const bottomPanelRef = useRef(null);
   const photoRef = useRef(null);
+
+  // Track mobile breakpoint so mobileStyle is applied correctly
+  const [isMobileView, setIsMobileView] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobileView(window.innerWidth <= 768);
+    check();
+    window.addEventListener("resize", check, { passive: true });
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const bottomPanelStyle = {
     background: "#e8e4dc",
@@ -198,7 +207,7 @@ export default function PortfolioHero() {
           });
         });
 
-        // ── MAGNETIC STICKERS (desktop) ──
+        // ── MAGNETIC STICKERS (desktop only) ──
         if (!isMobile()) {
           visibleStickers.forEach((el) => {
             el.addEventListener("mousemove", (e) => {
@@ -225,7 +234,7 @@ export default function PortfolioHero() {
           });
         }
 
-        // ── PARALLAX on mouse (desktop) ──
+        // ── PARALLAX on mouse (desktop only) ──
         if (!isMobile()) {
           const onMouseMove = (e) => {
             const { innerWidth: W, innerHeight: H } = window;
@@ -295,45 +304,56 @@ export default function PortfolioHero() {
         }
         .hero-cta { white-space: nowrap; }
 
+        /* ─── 768px ─── */
         @media (max-width: 768px) {
           .hero-grid {
             grid-template-columns: 1fr;
-            gap: 14px;
-            padding: 20px 20px 24px;
+            gap: 16px;
+            padding: 20px 20px 28px;
           }
-          .hero-cta { justify-self: start; }
-          .hero-title-wrap { padding: 28px 20px 0 !important; }
-          .bottom-panel { min-height: 380px !important; }
+          .hero-cta         { justify-self: start; }
+          /* Add enough top padding to clear the 68px fixed nav */
+          .hero-title-wrap  { padding: 86px 20px 0 !important; }
+          .bottom-panel     { min-height: 420px !important; }
           .photo-wrap {
-            width: 200px !important;
-            height: 300px !important;
-            border-radius: 100px 100px 0 0 !important;
-          }
-          .circle-cutout {
-            width: 340px !important;
+            width: 220px !important;
             height: 340px !important;
-            top: -30px !important;
-            right: -60px !important;
+            border-radius: 110px 110px 0 0 !important;
           }
+          /* Center the circle cutout behind the centered photo */
+          .circle-cutout {
+            width: 360px !important;
+            height: 360px !important;
+            top: -50px !important;
+            right: auto !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+          }
+          /* Slightly smaller sticker text on mobile */
+          .sticker-label    { font-size: 12px !important; }
+          .sticker-sub      { font-size: 8px !important; }
         }
 
+        /* ─── 480px ─── */
         @media (max-width: 480px) {
-          .hero-grid { padding: 16px 16px 20px; gap: 12px; }
-          .hero-title-wrap { padding: 20px 16px 0 !important; }
-          .bottom-panel { min-height: 320px !important; }
+          .hero-grid           { padding: 16px 16px 24px; gap: 14px; }
+          .hero-title-wrap     { padding: 80px 16px 0 !important; }
+          .bottom-panel        { min-height: 370px !important; }
+          /* Hide the second paragraph to keep mobile clean */
+          .hero-para-secondary { display: none; }
           .photo-wrap {
-            width: 160px !important;
-            height: 240px !important;
-            border-radius: 80px 80px 0 0 !important;
+            width: 180px !important;
+            height: 280px !important;
+            border-radius: 90px 90px 0 0 !important;
           }
           .circle-cutout {
-            width: 260px !important;
-            height: 260px !important;
-            top: -20px !important;
-            right: -40px !important;
+            width: 290px !important;
+            height: 290px !important;
+            top: -40px !important;
           }
         }
 
+        /* Hide desktop-only stickers on mobile */
         @media (max-width: 768px) {
           .sticker-desktop-only { display: none !important; }
         }
@@ -350,13 +370,17 @@ export default function PortfolioHero() {
         }}
       >
         {/* ── HERO TITLE ── */}
-        <div className="hero-title-wrap" style={{ padding: "40px 40px 0" }}>
+        <div
+          className="hero-title-wrap"
+          style={{
+            padding: "108px 40px 0" /* 68px nav + 40px breathing room */,
+          }}
+        >
           <h1
             ref={titleRef}
             style={{
               color: "#F4F1EC",
-              fontSize: "clamp(38px, 10vw, 120px)",
-              paddingTop: 20,
+              fontSize: "clamp(40px, 10vw, 120px)",
               fontWeight: 900,
               lineHeight: 0.9,
               letterSpacing: "-0.02em",
@@ -365,24 +389,41 @@ export default function PortfolioHero() {
               perspective: "600px",
             }}
           >
-            FRONTEND <br/>DEVELOPER
+            FRONTEND <br />
+            DEVELOPER
           </h1>
         </div>
 
         {/* ── HERO SUBTEXT ── */}
         <div ref={heroTextRef} className="hero-grid">
-          <p style={{ color: "#ccc", fontSize: 14, lineHeight: 1.6, margin: 0, maxWidth: 360 }}>
+          <p
+            style={{
+              color: "#ccc",
+              fontSize: 14,
+              lineHeight: 1.6,
+              margin: 0,
+              maxWidth: 360,
+            }}
+          >
             I craft pixel-perfect interfaces and intuitive user experiences
-            using React, Tawilwind CSSS and GSAP — bridging the gap between
+            using React, Tailwind CSS, and GSAP — bridging the gap between
             design and engineering with precision.
           </p>
-          <p style={{ color: "#ccc", fontSize: 14, lineHeight: 1.6, margin: 0, maxWidth: 360 }}>
-            I'm frontend developer who turns Figma concepts
-            into fast, accessible, and beautifully animated web products that
-            users love.
+          {/* Hidden on very small screens to reduce clutter */}
+          <p
+            className="hero-para-secondary"
+            style={{
+              color: "#ccc",
+              fontSize: 14,
+              lineHeight: 1.6,
+              margin: 0,
+              maxWidth: 360,
+            }}
+          >
+            I'm a frontend developer who turns Figma concepts into fast,
+            accessible, and beautifully animated web products that users love.
           </p>
 
-          {/* ✅ FIXED: restored missing opening <a tag */}
           <a
             ref={ctaRef}
             href="#"
@@ -408,7 +449,12 @@ export default function PortfolioHero() {
         </div>
 
         {/* ── BOTTOM PANEL ── */}
-        <div ref={bottomPanelRef} className="bottom-panel" style={bottomPanelStyle}>
+        <div
+          ref={bottomPanelRef}
+          className="bottom-panel"
+          style={bottomPanelStyle}
+        >
+          {/* Dark circle that frames the photo */}
           <div
             className="circle-cutout"
             style={{
@@ -423,6 +469,7 @@ export default function PortfolioHero() {
             }}
           />
 
+          {/* Profile photo */}
           <div
             ref={photoRef}
             className="photo-wrap"
@@ -452,8 +499,13 @@ export default function PortfolioHero() {
             />
           </div>
 
+          {/* Stickers */}
           {stickers.map((s, i) => {
             const isHidden = s.mobileStyle === null;
+            // Apply mobileStyle on small screens, desktop style otherwise
+            const positionStyle =
+              isMobileView && s.mobileStyle ? s.mobileStyle : s.style;
+
             return (
               <div
                 key={s.id}
@@ -461,7 +513,7 @@ export default function PortfolioHero() {
                 className={isHidden ? "sticker-desktop-only" : ""}
                 style={{
                   position: "absolute",
-                  ...s.style,
+                  ...positionStyle,
                   background: s.bg,
                   color: s.color,
                   padding: s.shape === "circle" ? "30px 20px" : "14px 18px",
@@ -484,15 +536,26 @@ export default function PortfolioHero() {
                   e.currentTarget.style.boxShadow = "5px 7px 0 rgba(0,0,0,0.3)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = "3px 4px 0 rgba(0,0,0,0.25)";
+                  e.currentTarget.style.boxShadow =
+                    "3px 4px 0 rgba(0,0,0,0.25)";
                 }}
               >
                 {s.shape === "circle" && (
-                  <div style={{ position: "absolute", top: 8, left: "50%", transform: "translateX(-50%)", fontSize: 18, opacity: 0.7 }}>
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 8,
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      fontSize: 18,
+                      opacity: 0.7,
+                    }}
+                  >
                     ◑
                   </div>
                 )}
                 <div
+                  className="sticker-label"
                   style={{
                     fontSize: s.shape === "circle" ? 13 : 14,
                     fontWeight: 900,
@@ -505,18 +568,50 @@ export default function PortfolioHero() {
                   {s.label}
                 </div>
                 {s.sub && (
-                  <div style={{ fontSize: 9, fontWeight: 600, marginTop: 4, opacity: 0.75, letterSpacing: "0.04em", whiteSpace: "pre-line", textTransform: "uppercase" }}>
+                  <div
+                    className="sticker-sub"
+                    style={{
+                      fontSize: 9,
+                      fontWeight: 600,
+                      marginTop: 4,
+                      opacity: 0.75,
+                      letterSpacing: "0.04em",
+                      whiteSpace: "pre-line",
+                      textTransform: "uppercase",
+                    }}
+                  >
                     {s.sub}
                   </div>
                 )}
                 {s.shape === "circle" && (
-                  <svg viewBox="0 0 100 100" width="116" height="116"
-                    style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", opacity: 0.18, animation: "spinSlow 12s linear infinite" }}
+                  <svg
+                    viewBox="0 0 100 100"
+                    width="116"
+                    height="116"
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%,-50%)",
+                      opacity: 0.18,
+                      animation: "spinSlow 12s linear infinite",
+                    }}
                   >
-                    <path id={`cp-${s.id}`} d="M 50,50 m -37,0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="none" />
-                    <text fontSize="11" fontWeight="700" fill={s.color} letterSpacing="3">
+                    <path
+                      id={`cp-${s.id}`}
+                      d="M 50,50 m -37,0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"
+                      fill="none"
+                    />
+                    <text
+                      fontSize="11"
+                      fontWeight="700"
+                      fill={s.color}
+                      letterSpacing="3"
+                    >
                       <textPath href={`#cp-${s.id}`}>
-                        {s.id === 1 ? "★ REACT ★ NEXT.JS ★ FRONTEND" : "★ SPEED ★ PERF ★ LIGHTHOUSE"}
+                        {s.id === 1
+                          ? "★ REACT ★ NEXT.JS ★ FRONTEND"
+                          : "★ SPEED ★ PERF ★ LIGHTHOUSE"}
                       </textPath>
                     </text>
                   </svg>

@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 
 const NAV_LINKS = [
-  ["Work",    "#work"],
-  ["About",   "#about"],
-  ["Skills",  "#skills"],
+  ["Work", "#work"],
+  ["About", "#about"],
+  ["Skills", "#skills"],
   ["Contact", "#contact"],
 ];
 
@@ -61,9 +61,7 @@ const styles = `
     border-radius: 100px;
     transition: transform .25s cubic-bezier(.34,1.56,.64,1);
   }
-  .nav-logo:hover {
-    transform: scale(1.05);
-  }
+  .nav-logo:hover { transform: scale(1.05); }
   .nav-logo-dot {
     display: inline-block;
     width: 7px;
@@ -74,11 +72,9 @@ const styles = `
     margin-bottom: 9px;
     transition: transform .3s cubic-bezier(.34,1.56,.64,1);
   }
-  .nav-logo:hover .nav-logo-dot {
-    transform: scale(1.5);
-  }
+  .nav-logo:hover .nav-logo-dot { transform: scale(1.5); }
 
-  /* — Links (desktop) — */
+  /* — Desktop links — */
   .nav-links {
     display: flex;
     align-items: center;
@@ -106,7 +102,7 @@ const styles = `
     background: rgba(17,17,16,.06);
   }
 
-  /* — CTA — */
+  /* — Desktop CTA — */
   .nav-cta {
     font-family: 'DM Sans', sans-serif;
     font-weight: 500;
@@ -131,14 +127,11 @@ const styles = `
     background: #d4f94a;
   }
   .nav-cta:active { transform: scale(.97); }
-
   .nav-cta-arrow {
     display: inline-block;
     transition: transform .2s cubic-bezier(.34,1.56,.64,1);
   }
-  .nav-cta:hover .nav-cta-arrow {
-    transform: translate(2px, -1px);
-  }
+  .nav-cta:hover .nav-cta-arrow { transform: translate(2px,-1px); }
 
   /* — Hamburger — */
   .nav-hamburger {
@@ -147,32 +140,32 @@ const styles = `
     justify-content: center;
     align-items: center;
     gap: 5px;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     background: none;
     border: none;
     cursor: pointer;
     padding: 0;
     z-index: 1100;
+    -webkit-tap-highlight-color: transparent;
   }
-.nav-hamburger span {
+  /* Default (dark hero bg): light bars */
+  .nav-hamburger span {
     display: block;
     width: 22px;
     height: 2px;
-    background: #F4F1EC;  /* ← was var(--ink) */
+    background: #F4F1EC;
     border-radius: 2px;
-    transition: all .3s cubic-bezier(.16,1,.3,1);
-}
-  .nav-hamburger.open span:nth-child(1) {
-    transform: translateY(7px) rotate(45deg);
+    transition: background .3s ease, transform .3s cubic-bezier(.16,1,.3,1),
+                opacity .3s ease;
   }
-  .nav-hamburger.open span:nth-child(2) {
-    opacity: 0;
-    transform: scaleX(0);
+  /* When nav is scrolled (glass/light bg): switch bars to dark */
+  .nav-root.scrolled .nav-hamburger span {
+    background: var(--ink);
   }
-  .nav-hamburger.open span:nth-child(3) {
-    transform: translateY(-7px) rotate(-45deg);
-  }
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
   /* — Mobile drawer — */
   .nav-drawer {
@@ -184,9 +177,9 @@ const styles = `
     backdrop-filter: blur(20px) saturate(160%);
     -webkit-backdrop-filter: blur(20px) saturate(160%);
     border-bottom: 1px solid var(--border);
-    padding: 16px 20px 24px;
+    padding: 12px 16px 20px;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
     z-index: 999;
     transform: translateY(-10px);
     opacity: 0;
@@ -198,42 +191,68 @@ const styles = `
     transform: translateY(0);
     pointer-events: all;
   }
+
   .nav-drawer-link {
     font-family: 'DM Sans', sans-serif;
     font-weight: 500;
-    font-size: 16px;
+    font-size: 15px;
     color: var(--muted);
     text-decoration: none;
-    padding: 12px 16px;
+    /* 48px min touch target */
+    padding: 14px 16px;
     border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     transition: color .2s, background .2s;
+    -webkit-tap-highlight-color: transparent;
   }
-  .nav-drawer-link:hover {
+  .nav-drawer-link::after {
+    content: '→';
+    font-size: 13px;
+    opacity: 0;
+    transform: translateX(-6px);
+    transition: opacity .2s, transform .2s;
+  }
+  .nav-drawer-link:hover,
+  .nav-drawer-link:active {
     color: var(--ink);
     background: rgba(17,17,16,.06);
   }
+  .nav-drawer-link:hover::after {
+    opacity: 0.5;
+    transform: translateX(0);
+  }
+
+  .nav-drawer-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 8px 0;
+  }
+
   .nav-drawer-cta {
-    margin-top: 8px;
+    margin-top: 4px;
     text-align: center;
     background: var(--lime);
     color: var(--ink);
     font-family: 'DM Sans', sans-serif;
     font-weight: 600;
     font-size: 15px;
-    padding: 13px;
+    /* 52px touch target */
+    padding: 16px;
     border-radius: 100px;
     text-decoration: none;
     display: block;
-    transition: background .2s;
+    transition: background .2s, transform .15s;
+    -webkit-tap-highlight-color: transparent;
   }
-  .nav-drawer-cta:hover {
-    background: #d4f94a;
-  }
+  .nav-drawer-cta:hover { background: #d4f94a; }
+  .nav-drawer-cta:active { transform: scale(.97); }
 
   @media (max-width: 640px) {
-    .nav-links    { display: none; }
-    .nav-cta      { display: none; }
-    .nav-inner    { padding: 0 20px; }
+    .nav-links     { display: none; }
+    .nav-cta       { display: none; }
+    .nav-inner     { padding: 0 16px; }
     .nav-hamburger { display: flex; }
     .nav-drawer    { display: flex; }
   }
@@ -241,12 +260,21 @@ const styles = `
 
 const Nav = () => {
   const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen]         = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Close drawer on route change / resize to desktop
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth > 640) setOpen(false);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
   }, []);
 
   const close = () => setOpen(false);
@@ -257,7 +285,6 @@ const Nav = () => {
 
       <nav className={`nav-root${scrolled || open ? " scrolled" : ""}`}>
         <div className="nav-inner">
-
           {/* Logo */}
           <a href="#" className="nav-logo">
             ST
@@ -267,7 +294,9 @@ const Nav = () => {
           {/* Desktop links */}
           <div className="nav-links">
             {NAV_LINKS.map(([label, href]) => (
-              <a key={label} href={href} className="nav-link">{label}</a>
+              <a key={label} href={href} className="nav-link">
+                {label}
+              </a>
             ))}
           </div>
 
@@ -281,23 +310,33 @@ const Nav = () => {
           <button
             className={`nav-hamburger${open ? " open" : ""}`}
             onClick={() => setOpen((v) => !v)}
-            aria-label="Toggle menu"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
           >
             <span />
             <span />
             <span />
           </button>
-
         </div>
       </nav>
 
       {/* Mobile drawer */}
-      <div className={`nav-drawer${open ? " open" : ""}`}>
+      <div
+        className={`nav-drawer${open ? " open" : ""}`}
+        role="dialog"
+        aria-label="Navigation menu"
+      >
         {NAV_LINKS.map(([label, href]) => (
-          <a key={label} href={href} className="nav-drawer-link" onClick={close}>
+          <a
+            key={label}
+            href={href}
+            className="nav-drawer-link"
+            onClick={close}
+          >
             {label}
           </a>
         ))}
+        <div className="nav-drawer-divider" />
         <a href="#contact" className="nav-drawer-cta" onClick={close}>
           Let's Talk ↗
         </a>
