@@ -27,7 +27,7 @@ const PROJECTS = [
     col:    "#60a5fa",
     tech:   ["MERN", "Socket.io", "Stream"],
     result: "Real-time messaging with video calls & friend system.",
-    link:   "https://chat-web-app-4ay2.vercel.app/login",
+    link:   "https://chat-web-app-6qu6.vercel.app/",
   },
   {
     n:      "04",
