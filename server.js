@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 import { Resend } from "resend";
 
 dotenv.config({ override: false });
+console.log("RESEND_API_KEY:", process.env.RESEND_API_KEY ? "loaded" : "undefined");
+console.log("GMAIL_USER:", process.env.GMAIL_USER ? "loaded" : "undefined");
 
 const app = express();
 app.use(express.json());
