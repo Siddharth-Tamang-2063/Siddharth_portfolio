@@ -3,7 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { Resend } from "resend";
 
-dotenv.config();
+dotenv.config({ override: false });
 
 const app = express();
 app.use(express.json());
