@@ -7,7 +7,7 @@ const PROJECTS = [
     name:   "Deadstock Thrift.",
     emoji:  "🛍",
     col:    "#f97316",
-    tech:   ["React", "Node", "MongoDB"],
+    tech:   ["React", "Node", "MongoDB","Express","Tailwind"],
     result: "Full thrift e-commerce. Buy & sell second-hand finds.",
     link:   "https://deadstock-thrift-official.vercel.app",
   },

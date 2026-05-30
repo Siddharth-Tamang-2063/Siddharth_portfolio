@@ -9,25 +9,25 @@ const SKILLS = [
   {
     n: "01",
     icon: "✦",
-    h: "UI / UX Visionary",
-    b: "Crafting pixel-perfect, soul-stirring interfaces that users don't just use — they feel. Every shadow, every curve is intentional.",
-    t: ["Figma", "Design Systems", "UX Research"],
+    h: "Frontend Engineer",
+    b: "React, Tailwind, GSAP — fast, accessible, and beautifully crafted UIs. Every interaction is intentional, every screen is considered.",
+    t: ["React", "Tailwind", "GSAP"],
     accent: "#f5f0e8",
   },
   {
     n: "02",
     icon: "◈",
-    h: "Frontend Architect",
-    b: "React, Tailwind, Vite — blazing-fast, beautifully animated UIs that set the bar. Not just responsive, but jaw-dropping on every screen.",
-    t: ["React", "Tailwind", "Vite"],
+    h: "Backend Engineer",
+    b: "Node.js, Express, REST APIs, JWT auth — scalable server-side systems built to handle real traffic without breaking a sweat.",
+    t: ["Node.js", "Express", "REST APIs", "JWT"],
     accent: "#eef0f5",
   },
   {
-    n: "04",
+    n: "03",
     icon: "◉",
-    h: "Problem Destroyer",
-    b: "Gnarly algorithms, impossible deadlines — I ship. Computer Engineering student by day, unstoppable builder every other hour.",
-    t: ["C", "JavaScript", "Algorithms"],
+    h: "Database & Deployment",
+    b: "MongoDB, Render, Vercel — I own the full pipeline from schema design to production deploy and keep it running.",
+    t: ["MongoDB", "Vercel", "Render"],
     accent: "#f5eef0",
   },
 ];
@@ -357,14 +357,15 @@ const AboutMe = () => {
             >
               A{" "}
               <strong style={{ color: "var(--ink,#111)", fontWeight: 500 }}>
-                Frontend Developer
+                Full Stack Developer
               </strong>{" "}
               pursuing a Diploma in Computer Engineering at{" "}
               <strong style={{ color: "var(--ink,#111)", fontWeight: 500 }}>
                 Adarsha Secondary School
               </strong>
-              . I live at the intersection of design and engineering
-              —&nbsp;where beautiful meets bulletproof.
+              . I build complete web products end-to-end — from pixel-perfect
+              interfaces to scalable APIs and databases, owning every layer of
+              the stack.
             </p>
           </div>
 

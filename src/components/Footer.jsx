@@ -186,9 +186,9 @@ const Footer = () => {
             <div className="syne" style={{ fontSize: "28px", fontWeight: 800, color: "#FAFAF8", letterSpacing: "-.03em", marginBottom: "16px" }}>
               ST<span style={{ color: "var(--lime)" }}>.</span>
             </div>
-            <p style={{ fontSize: "14px", color: "rgba(255,255,255,.35)", lineHeight: 1.75, maxWidth: "280px" }}>
-              Frontend Developer from Nepal. Building fast, beautiful web experiences for global clients.
-            </p>
+          <p style={{ fontSize: "14px", color: "rgba(255,255,255,.35)", lineHeight: 1.75, maxWidth: "280px" }}>
+  Full Stack Developer from Nepal. Building complete web products — from polished UIs to scalable backends — for global clients.
+</p>
             <div style={{
               display: "inline-flex", alignItems: "center", gap: "7px",
               marginTop: "20px", padding: "7px 14px", borderRadius: 100,

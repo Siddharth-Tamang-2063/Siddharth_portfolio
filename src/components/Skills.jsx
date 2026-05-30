@@ -11,8 +11,8 @@ const ICONS = {
   CSS:          "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg",
   Tailwind:     "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg",
   GSAP:         "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/gsap/gsap-original.svg",
-  "Node.js":    "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg",
-  "Express.js": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg",
+  "Node.js":    "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original-wordmark.svg",
+"Express": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original-wordmark.svg",
   MongoDB:      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg",
   Git:          "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg",
   Figma:        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg",
@@ -25,11 +25,11 @@ const ICONS = {
    Skill Data
 ───────────────────────────────────── */
 const CATEGORIES = [
-  {
-    label: "Skills",
-    color: "#60a5fa",
-    skills: ["React", "JavaScript", "HTML", "CSS", "Tailwind", "GSAP"],
-  },
+ {
+  label: "Skills",
+  color: "#60a5fa",
+  skills: ["React",  "Node.js", "Express", "MongoDB",  "JavaScript",  "Tailwind", "REST APIs",],
+},
   
   {
     label: "Tools",
@@ -195,79 +195,78 @@ const Skills = () => {
         </div>
 
         {/* Currently learning banner */}
-        <div
-          className="fcard sr"
-          data-d=".25"
-          style={{
-            marginTop:      "64px",
-            padding:        "36px 40px",
-            background:     "var(--ink)",
-            display:        "flex",
-            alignItems:     "center",
-            justifyContent: "space-between",
-            flexWrap:       "wrap",
-            gap:            "24px",
-            animation:      "floatB 9s ease-in-out infinite 2s",
-          }}
-        >
-          <div>
-            <div
-              className="dmono"
-              style={{ fontSize: "10px", color: "rgba(255,255,255,.3)", letterSpacing: ".2em", marginBottom: "10px" }}
-            >
-              Currently Learning
-            </div>
-            <div
-              className="syne"
-              style={{
-                color:         "var(--lime)",
-                fontSize:      "clamp(20px, 2.5vw, 32px)",
-                fontWeight:    800,
-                lineHeight:    1.05,
-                letterSpacing: "-.03em",
-              }}
-            >
-              MERN Stack
-            </div>
-          </div>
+       <div
+  className="fcard sr"
+  data-d=".25"
+  style={{
+    marginTop:      "64px",
+    padding:        "36px 40px",
+    background:     "var(--ink)",
+    display:        "flex",
+    alignItems:     "center",
+    justifyContent: "space-between",
+    flexWrap:       "wrap",
+    gap:            "24px",
+    animation:      "floatB 9s ease-in-out infinite 2s",
+  }}
+>
+  <div>
+    <div
+      className="dmono"
+      style={{ fontSize: "10px", color: "rgba(255,255,255,.3)", letterSpacing: ".2em", marginBottom: "10px" }}
+    >
+      Currently Learning
+    </div>
+    <div
+      className="syne"
+      style={{
+        color:         "var(--lime)",
+        fontSize:      "clamp(20px, 2.5vw, 32px)",
+        fontWeight:    800,
+        lineHeight:    1.05,
+        letterSpacing: "-.03em",
+      }}
+    >
+      AI & Automation
+    </div>
+  </div>
 
-          {/* Milestone chips */}
-          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-            {[
-              { label: "React",   done: true },
-              { label: "Node",    done: true },
-              { label: "Express", done: true },
-              { label: "MongoDB", done: true },
-            ].map(({ label, done }) => (
-              <div
-                key={label}
-                style={{
-                  display:      "flex",
-                  alignItems:   "center",
-                  gap:          "6px",
-                  padding:      "7px 14px",
-                  borderRadius: 100,
-                  background:   done ? "rgba(203,255,94,.12)" : "rgba(255,255,255,.05)",
-                  border:       `1px solid ${done ? "rgba(203,255,94,.3)" : "rgba(255,255,255,.1)"}`,
-                }}
-              >
-                {done ? (
-                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
-                    <path d="M2 6l3 3 5-5" stroke="#CBFF5E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                ) : (
-                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,.2)", display: "block" }} />
-                )}
-                <span
-                  className="dmono"
-                  style={{ fontSize: "11px", letterSpacing: ".05em", color: done ? "rgba(203,255,94,.85)" : "rgba(255,255,255,.3)" }}
-                >
-                  {label}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
+  <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+    {[
+      { label: "n8n",          done: false  },
+      { label: "AI Agents",    done: true  },
+      { label: "LLM APIs",     done: true  },
+      { label: "AI Integration", done: false },
+    ].map(({ label, done }) => (
+      <div
+        key={label}
+        style={{
+          display:      "flex",
+          alignItems:   "center",
+          gap:          "6px",
+          padding:      "7px 14px",
+          borderRadius: 100,
+          background:   done ? "rgba(203,255,94,.12)" : "rgba(255,255,255,.05)",
+          border:       `1px solid ${done ? "rgba(203,255,94,.3)" : "rgba(255,255,255,.1)"}`,
+        }}
+      >
+        {done ? (
+          <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+            <path d="M2 6l3 3 5-5" stroke="#CBFF5E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ) : (
+          <span style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,.2)", display: "block" }} />
+        )}
+        <span
+          className="dmono"
+          style={{ fontSize: "11px", letterSpacing: ".05em", color: done ? "rgba(203,255,94,.85)" : "rgba(255,255,255,.3)" }}
+        >
+          {label}
+        </span>
+      </div>
+    ))}
+  </div>
+</div>
 
       </div>
     </section>

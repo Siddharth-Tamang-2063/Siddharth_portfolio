@@ -8,8 +8,8 @@ gsap.registerPlugin(ScrollTrigger);
 const stickers = [
   {
     id: 1,
-    label: "REACT &\nNEXT.JS",
-    sub: "BUILDING → FAST & SCALABLE APPS",
+    label: "REACT &\nNODE.JS",
+    sub: "BUILDING → FULL STACK APPS",
     bg: "#5ecfcf",
     color: "#000",
     shape: "circle",
@@ -19,7 +19,7 @@ const stickers = [
   },
   {
     id: 2,
-    label: "UI/UX\nDESIGN©",
+    label: "REST\nAPIs©",
     bg: "#f06292",
     color: "#fff",
     shape: "rect",
@@ -29,17 +29,17 @@ const stickers = [
   },
   {
     id: 3,
-    label: "DESIGN\nSYSTEMS\n©'24",
+    label: "MONGO\nDB\n©'24",
     bg: "#5ecfcf",
     color: "#000",
     shape: "rect",
     style: { top: "12%", right: "4%" },
-    mobileStyle: null, // hidden on mobile
+    mobileStyle: null,
     rotate: -3,
   },
   {
     id: 4,
-    label: "FIGMA &\nⓔ PROTOTYPING",
+    label: "EXPRESS &\nJAVASCRIPT",
     sub: "WWW. ↗",
     bg: "#f5e642",
     color: "#000",
@@ -50,17 +50,17 @@ const stickers = [
   },
   {
     id: 5,
-    label: "CSS &\nTAILWIND\n→ STYLING",
+    label: "MONGO &\nDB\n→ JSON",
     bg: "#f4833d",
     color: "#fff",
     shape: "rect",
     style: { bottom: "18%", left: "8%" },
-    mobileStyle: null, // hidden on mobile
+    mobileStyle: null,
     rotate: 3,
   },
   {
     id: 6,
-    label: "WEB\nPERFORMANCE",
+    label: "FULL\nSTACK",
     bg: "#b5e550",
     color: "#000",
     shape: "circle",
@@ -79,7 +79,6 @@ export default function PortfolioHero() {
   const bottomPanelRef = useRef(null);
   const photoRef = useRef(null);
 
-  // Track mobile breakpoint so mobileStyle is applied correctly
   const [isMobileView, setIsMobileView] = useState(false);
   useEffect(() => {
     const check = () => setIsMobileView(window.innerWidth <= 768);
@@ -104,7 +103,6 @@ export default function PortfolioHero() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       try {
-        // ── TITLE: character split ──
         const titleEl = titleRef.current;
         if (!titleEl) return;
 
@@ -137,7 +135,6 @@ export default function PortfolioHero() {
           delay: 0.1,
         });
 
-        // ── SUBTEXT ──
         if (heroTextRef.current?.children) {
           gsap.from(heroTextRef.current.children, {
             opacity: 0,
@@ -149,7 +146,6 @@ export default function PortfolioHero() {
           });
         }
 
-        // ── CTA ──
         if (ctaRef.current) {
           gsap.from(ctaRef.current, {
             opacity: 0,
@@ -160,7 +156,6 @@ export default function PortfolioHero() {
           });
         }
 
-        // ── BOTTOM PANEL ──
         if (bottomPanelRef.current) {
           gsap.from(bottomPanelRef.current, {
             y: 80,
@@ -171,7 +166,6 @@ export default function PortfolioHero() {
           });
         }
 
-        // ── PHOTO ──
         if (photoRef.current) {
           gsap.from(photoRef.current, {
             scale: 0.85,
@@ -182,7 +176,6 @@ export default function PortfolioHero() {
           });
         }
 
-        // ── STICKERS: elastic pop-in ──
         const visibleStickers = stickersRef.current.filter(Boolean);
         gsap.from(visibleStickers, {
           opacity: 0,
@@ -193,7 +186,6 @@ export default function PortfolioHero() {
           delay: 1.0,
         });
 
-        // ── STICKERS: continuous float ──
         visibleStickers.forEach((el, i) => {
           gsap.to(el, {
             y: `${i % 2 === 0 ? -12 : 12}`,
@@ -207,7 +199,6 @@ export default function PortfolioHero() {
           });
         });
 
-        // ── MAGNETIC STICKERS (desktop only) ──
         if (!isMobile()) {
           visibleStickers.forEach((el) => {
             el.addEventListener("mousemove", (e) => {
@@ -234,7 +225,6 @@ export default function PortfolioHero() {
           });
         }
 
-        // ── PARALLAX on mouse (desktop only) ──
         if (!isMobile()) {
           const onMouseMove = (e) => {
             const { innerWidth: W, innerHeight: H } = window;
@@ -262,7 +252,6 @@ export default function PortfolioHero() {
           return () => window.removeEventListener("mousemove", onMouseMove);
         }
 
-        // ── SCROLL: title parallax ──
         ScrollTrigger.create({
           trigger: containerRef.current,
           start: "top top",
@@ -304,7 +293,6 @@ export default function PortfolioHero() {
         }
         .hero-cta { white-space: nowrap; }
 
-        /* ─── 768px ─── */
         @media (max-width: 768px) {
           .hero-grid {
             grid-template-columns: 1fr;
@@ -312,7 +300,6 @@ export default function PortfolioHero() {
             padding: 20px 20px 28px;
           }
           .hero-cta         { justify-self: start; }
-          /* Add enough top padding to clear the 68px fixed nav */
           .hero-title-wrap  { padding: 86px 20px 0 !important; }
           .bottom-panel     { min-height: 420px !important; }
           .photo-wrap {
@@ -320,7 +307,6 @@ export default function PortfolioHero() {
             height: 340px !important;
             border-radius: 110px 110px 0 0 !important;
           }
-          /* Center the circle cutout behind the centered photo */
           .circle-cutout {
             width: 360px !important;
             height: 360px !important;
@@ -329,17 +315,14 @@ export default function PortfolioHero() {
             left: 50% !important;
             transform: translateX(-50%) !important;
           }
-          /* Slightly smaller sticker text on mobile */
-          .sticker-label    { font-size: 12px !important; }
-          .sticker-sub      { font-size: 8px !important; }
+          .sticker-label { font-size: 12px !important; }
+          .sticker-sub   { font-size: 8px !important; }
         }
 
-        /* ─── 480px ─── */
         @media (max-width: 480px) {
           .hero-grid           { padding: 16px 16px 24px; gap: 14px; }
           .hero-title-wrap     { padding: 80px 16px 0 !important; }
           .bottom-panel        { min-height: 370px !important; }
-          /* Hide the second paragraph to keep mobile clean */
           .hero-para-secondary { display: none; }
           .photo-wrap {
             width: 180px !important;
@@ -353,7 +336,6 @@ export default function PortfolioHero() {
           }
         }
 
-        /* Hide desktop-only stickers on mobile */
         @media (max-width: 768px) {
           .sticker-desktop-only { display: none !important; }
         }
@@ -369,13 +351,7 @@ export default function PortfolioHero() {
           userSelect: "none",
         }}
       >
-        {/* ── HERO TITLE ── */}
-        <div
-          className="hero-title-wrap"
-          style={{
-            padding: "108px 40px 0" /* 68px nav + 40px breathing room */,
-          }}
-        >
+        <div className="hero-title-wrap" style={{ padding: "108px 40px 0" }}>
           <h1
             ref={titleRef}
             style={{
@@ -389,39 +365,23 @@ export default function PortfolioHero() {
               perspective: "600px",
             }}
           >
-            FRONTEND <br />
+            FULL STACK <br />
             DEVELOPER
           </h1>
         </div>
 
-        {/* ── HERO SUBTEXT ── */}
         <div ref={heroTextRef} className="hero-grid">
-          <p
-            style={{
-              color: "#ccc",
-              fontSize: 14,
-              lineHeight: 1.6,
-              margin: 0,
-              maxWidth: 360,
-            }}
-          >
-            I craft pixel-perfect interfaces and intuitive user experiences
-            using React, Tailwind CSS, and GSAP — bridging the gap between
-            design and engineering with precision.
+          <p style={{ color: "#ccc", fontSize: 14, lineHeight: 1.6, margin: 0, maxWidth: 360 }}>
+            I build complete web products end-to-end — from polished React
+            interfaces to scalable Node.js APIs and MongoDB databases, shipping
+            features that work at every layer of the stack.
           </p>
-          {/* Hidden on very small screens to reduce clutter */}
           <p
             className="hero-para-secondary"
-            style={{
-              color: "#ccc",
-              fontSize: 14,
-              lineHeight: 1.6,
-              margin: 0,
-              maxWidth: 360,
-            }}
+            style={{ color: "#ccc", fontSize: 14, lineHeight: 1.6, margin: 0, maxWidth: 360 }}
           >
-            I'm a frontend developer who turns Figma concepts into fast,
-            accessible, and beautifully animated web products that users love.
+            I take ideas from Figma to production — handling auth, REST APIs,
+            databases, and deployment without switching teams.
           </p>
 
           <a
@@ -448,13 +408,7 @@ export default function PortfolioHero() {
           </a>
         </div>
 
-        {/* ── BOTTOM PANEL ── */}
-        <div
-          ref={bottomPanelRef}
-          className="bottom-panel"
-          style={bottomPanelStyle}
-        >
-          {/* Dark circle that frames the photo */}
+        <div ref={bottomPanelRef} className="bottom-panel" style={bottomPanelStyle}>
           <div
             className="circle-cutout"
             style={{
@@ -469,7 +423,6 @@ export default function PortfolioHero() {
             }}
           />
 
-          {/* Profile photo */}
           <div
             ref={photoRef}
             className="photo-wrap"
@@ -499,12 +452,9 @@ export default function PortfolioHero() {
             />
           </div>
 
-          {/* Stickers */}
           {stickers.map((s, i) => {
             const isHidden = s.mobileStyle === null;
-            // Apply mobileStyle on small screens, desktop style otherwise
-            const positionStyle =
-              isMobileView && s.mobileStyle ? s.mobileStyle : s.style;
+            const positionStyle = isMobileView && s.mobileStyle ? s.mobileStyle : s.style;
 
             return (
               <div
@@ -536,8 +486,7 @@ export default function PortfolioHero() {
                   e.currentTarget.style.boxShadow = "5px 7px 0 rgba(0,0,0,0.3)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow =
-                    "3px 4px 0 rgba(0,0,0,0.25)";
+                  e.currentTarget.style.boxShadow = "3px 4px 0 rgba(0,0,0,0.25)";
                 }}
               >
                 {s.shape === "circle" && (
@@ -602,16 +551,11 @@ export default function PortfolioHero() {
                       d="M 50,50 m -37,0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"
                       fill="none"
                     />
-                    <text
-                      fontSize="11"
-                      fontWeight="700"
-                      fill={s.color}
-                      letterSpacing="3"
-                    >
+                    <text fontSize="11" fontWeight="700" fill={s.color} letterSpacing="3">
                       <textPath href={`#cp-${s.id}`}>
                         {s.id === 1
-                          ? "★ REACT ★ NEXT.JS ★ FRONTEND"
-                          : "★ SPEED ★ PERF ★ LIGHTHOUSE"}
+                          ? "★ REACT ★ NODE.JS ★ FULLSTACK"
+                          : "★ APIs ★ DB ★ DEPLOYMENT"}
                       </textPath>
                     </text>
                   </svg>
