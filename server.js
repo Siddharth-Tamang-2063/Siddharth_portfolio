@@ -11,6 +11,8 @@ app.use(cors());
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+const sanitize = (str) => str.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
 app.post("/api/contact", async (req, res) => {
   const { name, email, msg } = req.body;
 
@@ -22,13 +24,14 @@ app.post("/api/contact", async (req, res) => {
     await resend.emails.send({
       from:    "Portfolio <onboarding@resend.dev>",
       to:      process.env.GMAIL_USER,
+      replyTo: email,
       subject: `New message from ${name}`,
       html: `
         <h2>New Contact Form Submission</h2>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Name:</strong> ${sanitize(name)}</p>
+        <p><strong>Email:</strong> ${sanitize(email)}</p>
         <p><strong>Message:</strong></p>
-        <p>${msg}</p>
+        <p>${sanitize(msg)}</p>
       `,
     });
 
@@ -39,4 +42,5 @@ app.post("/api/contact", async (req, res) => {
   }
 });
 
-app.listen(5000, () => console.log("Server running on port 5000"));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
